@@ -7,6 +7,7 @@
     body {
       background-color: #000;
       display: flex;
+      flex-direction: column;
       justify-content: center;
       align-items: center;
       height: 100vh;
@@ -15,11 +16,50 @@
       border: 5px solid #00ffcc;
       border-radius: 12px;
       max-width: 100%;
-      max-height: 90vh;
+      max-height: 70vh;
+      margin-bottom: 24px;
+    }
+    .upload-section {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+    label, input, button {
+      font-size: 1rem;
     }
   </style>
 </head>
 <body>
-  <img src="http://127.0.0.1:8000/video-stream/" alt="Live Stream Not Available">
+  <div class="upload-section">
+    <input type="file" id="frameInput" accept="image/*">
+    <button onclick="uploadFrame()">Upload Frame</button>
+  </div>
+  <img id="stream" src="http://localhost:8000/video-stream/" alt="Live Stream Not Available">
+  <script>
+    async function uploadFrame() {
+      const input = document.getElementById('frameInput');
+      if (!input.files.length) {
+        alert('Please select an image file.');
+        return;
+      }
+      const file = input.files[0];
+      const formData = new FormData();
+      formData.append('file', file);
+
+      try {
+        const response = await fetch('http://localhost:8000/upload-frame/', {
+          method: 'POST',
+          body: formData
+        });
+        if (response.ok) {
+          alert('Frame uploaded!');
+        } else {
+          alert('Upload failed.');
+        }
+      } catch (err) {
+        alert('Error uploading frame.');
+      }
+    }
+  </script>
 </body>
 </html>
