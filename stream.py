@@ -1,8 +1,8 @@
-import threading
+from pathlib import Path
 
 class VideoStream:
     def __init__(self):
-        self.frame = None
+        self.frame = Path("placeholder.jpg").read_bytes()  # fallback image
         self.lock = threading.Lock()
 
     def set_frame(self, frame_data: bytes):
